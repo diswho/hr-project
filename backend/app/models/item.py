@@ -1,3 +1,4 @@
+# Shared properties
 from typing import TYPE_CHECKING, Optional
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -5,7 +6,6 @@ if TYPE_CHECKING:
     from .user import User
 
 
-# Shared properties
 class ItemBase(SQLModel):
     title: str
     description: str | None = None
@@ -39,24 +39,3 @@ class ItemOut(ItemBase):
 class ItemsOut(SQLModel):
     data: list[ItemOut]
     count: int
-
-
-# Generic message
-class Message(SQLModel):
-    message: str
-
-
-# JSON payload containing access token
-class Token(SQLModel):
-    access_token: str
-    token_type: str = "bearer"
-
-
-# Contents of JWT token
-class TokenPayload(SQLModel):
-    sub: int | None = None
-
-
-class NewPassword(SQLModel):
-    token: str
-    new_password: str

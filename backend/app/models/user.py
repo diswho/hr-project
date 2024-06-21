@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from .models import Item
+    from .item import Item
 
 # Shared properties
 # TODO replace email str with EmailStr when sqlmodel supports it
