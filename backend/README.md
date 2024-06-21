@@ -64,7 +64,7 @@ Make sure your editor is using the correct Python virtual environment.
 Modify or add SQLModel models for data and SQL tables in `./backend/app/models.py`, API endpoints in `./backend/app/api/`, CRUD (Create, Read, Update, Delete) utils in `./backend/app/crud.py`.
 ### Local Run
 
-`uvicorn ap`
+`uvicorn app.main:app --reload`
 ### VS Code
 
 There are already configurations in place to run the backend through the VS Code debugger, so that you can use breakpoints, pause and explore variables, etc.
