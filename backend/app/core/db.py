@@ -25,16 +25,26 @@ def init_db(session: Session) -> None:
     # from app.core.engine import engine
     # This works because the models are already imported and registered from app.models
     SQLModel.metadata.create_all(engine)
-    company=HRCompanyCreate(cmp_name="Xtv")
-
 
     user = session.exec(
         select(HREmployee).where(HREmployee.email == settings.FIRST_SUPERUSER)
     ).first()
     if not user:
+        company_in = HRCompanyCreate(cmp_name="my company")
+        company = crud.create_company(session=session, company_create=company_in)
+
+        department_in = HRDepartmentCreate(dept_code=1, dept_name="IT")
+        department_in.company = company
+        department = crud.create_department(department_in)
+
+        position_in = HRPositionCreate(posi_code=1, posi_name="Manager", posi_parentcode=0, company_id=company.id)
+        position = crud.create_position(position_in)
+
         user_in = HREmployeeCreate(
             email=settings.FIRST_SUPERUSER,
             password=settings.FIRST_SUPERUSER_PASSWORD,
             is_superuser=True,
+            department_id=department.id,
+            position_id=position.id
         )
         user = crud.create_user(session=session, user_create=user_in)

@@ -1,5 +1,9 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import DateTime
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+
+if TYPE_CHECKING:
+    from .department import HRDepartment
 
 
 class HRCompanyBase(SQLModel):
@@ -36,6 +40,7 @@ class HRCompanyCreate(HRCompanyBase):
 
 class HRCompany(HRCompanyBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    departments: list["HRDepartment"] = Relationship(back_populates="company")
 
 
 class HRCompanyUpdate(HRCompanyBase):

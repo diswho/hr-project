@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Optional
 from sqlalchemy import ForeignKey
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from .company import HRCompany
@@ -13,14 +13,13 @@ class HRDepartmentBase(SQLModel):
     useCode: bool | None = None
     dept_operationmode: int | None = None
     defaultDepartment: int | None = None
-    company_id: int
     lineToken: str | None = None
     description: str | None = None
+    company: "HRCompany" = Relationship(back_populates="departments")
 
 
 class HRDepartment(HRDepartmentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    company: Optional["HRCompany"] = ForeignKey(sa_column="company_id")
 
 
 class HRDepartmentCreate(HRDepartmentBase):

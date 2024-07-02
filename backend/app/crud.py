@@ -6,11 +6,29 @@ from app.core.security import get_password_hash, verify_password
 # from app.models.item import Item, ItemCreate
 # from app.models.user import User, UserCreate, UserUpdate
 from app.models.company import HRCompany, HRCompanyCreate
+from app.models.department import HRDepartment, HRDepartmentCreate
+from app.models.position import HRPosition, HRPositionCreate
 from app.models.employee import HREmployee, HREmployeeCreate, HREmployeeUpdate
+
+
+def create_department(*, session: Session, department_create: HRDepartmentCreate) -> HRDepartment:
+    db_obj = HRDepartment.model_validate(department_create)
+    session.add(db_obj)
+    session.commit()
+    session.refresh(db_obj)
+    return db_obj
 
 
 def create_company(*, session: Session, company_create: HRCompanyCreate) -> HRCompany:
     db_obj = HRCompany.model_validate(company_create)
+    session.add(db_obj)
+    session.commit()
+    session.refresh(db_obj)
+    return db_obj
+
+
+def create_position(*, session: Session, position_create: HRPositionCreate) -> HRPosition:
+    db_obj = HRPosition.model_validate(position_create)
     session.add(db_obj)
     session.commit()
     session.refresh(db_obj)
