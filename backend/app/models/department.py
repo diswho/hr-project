@@ -16,11 +16,11 @@ class HRDepartmentBase(SQLModel):
     company_id: int
     lineToken: str | None = None
     description: str | None = None
-    company: Optional["HRCompany"] = ForeignKey(sa_column="company_id")
 
 
 class HRDepartment(HRDepartmentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    company: Optional["HRCompany"] = ForeignKey(sa_column="company_id")
 
 
 class HRDepartmentCreate(HRDepartmentBase):
@@ -32,4 +32,3 @@ class HRDepartmentUpdate(HRDepartmentBase):
     dept_name: str | None = None
     dept_parentcode: int | None = None
     company_id: int | None = None
-    company: Optional["HRCompany"] | None = None

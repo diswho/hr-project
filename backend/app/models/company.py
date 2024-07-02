@@ -17,7 +17,6 @@ class HRCompanyBase(SQLModel):
     cmp_phone: str | None = None
     cmp_fax: str | None = None
     cmp_email: str | None = None
-    # cmp_logo: bytes | None = None
     cmp_showlogoInreport: bool | None = None
     cmp_website: str | None = None
     autoSendSMS: bool | None = None

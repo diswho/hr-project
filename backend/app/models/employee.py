@@ -2,6 +2,10 @@ from sqlmodel import Field, SQLModel, Column, Integer, Text, DateTime, BigInt, N
 
 
 class HREmployeeBase(SQLModel):
+    email: str = Field(unique=True, index=True)
+    is_active: bool = True
+    is_superuser: bool = False
+    full_name: str | None = None
     emp_pin: str
     emp_ssn: str | None = None
     emp_role: str | None = None
@@ -32,7 +36,6 @@ class HREmployeeBase(SQLModel):
     emp_state: str | None = None
     emp_postal: str | None = None
     emp_fax: str | None = None
-    emp_email: str | None = None
     emp_title: str | None = None
     emp_hourlyrate1: Numeric | None = None
     emp_hourlyrate2: Numeric | None = None
@@ -52,24 +55,32 @@ class HREmployeeBase(SQLModel):
     emp_customName2: str | None = None
     emp_customInfo2: str | None = None
     IsSelect: int
-    # middleware_id: BigInt | None = None
     nationalID: str | None = None
     emp_Verify: str | None = None
     emp_ViceCard: str | None = None
-    department_id: int | None = ForeignKey(default=None, sa_column="department_id", sa_column_kwargs={"null_index": True})
-    position_id: int | None = ForeignKey(default=None, sa_column="position_id", sa_column_kwargs={"null_index": True})
 
 
 class HREmployee(HREmployeeBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    hashed_password: str
+    department_id: int | None = ForeignKey(default=None, sa_column="department_id", sa_column_kwargs={"null_index": True})
+    position_id: int | None = ForeignKey(default=None, sa_column="position_id", sa_column_kwargs={"null_index": True})
 
 
 class HREmployeeCreate(HREmployeeBase):
-    pass
+    password: str
 
 
 class HREmployeeUpdate(HREmployeeBase):
-    emp_pin: str | None = None
-    emp_firstname: str | None = None
-    emp_active: int | None = None
-    IsSelect: int | None = None
+    email: str | None = None  # type: ignore
+    password: str | None = None
+
+
+class HREmployeeUpdateMe(HREmployeeBase):
+    full_name: str | None = None
+    email: str | None = None
+
+
+class UpdatePassword(SQLModel):
+    current_password: str
+    new_password: str
