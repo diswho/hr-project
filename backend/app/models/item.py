@@ -1,41 +1,41 @@
-# Shared properties
-from typing import TYPE_CHECKING, Optional
-from sqlmodel import Field, Relationship, SQLModel
+# # Shared properties
+# from typing import TYPE_CHECKING, Optional
+# from sqlmodel import Field, Relationship, SQLModel
 
-if TYPE_CHECKING:
-    from .user import User
-
-
-class ItemBase(SQLModel):
-    title: str
-    description: str | None = None
+# if TYPE_CHECKING:
+#     from .user import User
 
 
-# Properties to receive on item creation
-class ItemCreate(ItemBase):
-    title: str
+# class ItemBase(SQLModel):
+#     title: str
+#     description: str | None = None
 
 
-# Properties to receive on item update
-class ItemUpdate(ItemBase):
-    title: str | None = None  # type: ignore
+# # Properties to receive on item creation
+# class ItemCreate(ItemBase):
+#     title: str
 
 
-# Database model, database table inferred from class name
-class Item(ItemBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    title: str
-    owner_id: int | None = Field(default=None, foreign_key="user.id", nullable=False)
-    # owner: "User" | None = Relationship(back_populates="items")
-    owner: Optional["User"] = Relationship(back_populates="items")
+# # Properties to receive on item update
+# class ItemUpdate(ItemBase):
+#     title: str | None = None  # type: ignore
 
 
-# Properties to return via API, id is always required
-class ItemOut(ItemBase):
-    id: int
-    owner_id: int
+# # Database model, database table inferred from class name
+# class Item(ItemBase, table=True):
+#     id: int | None = Field(default=None, primary_key=True)
+#     title: str
+#     owner_id: int | None = Field(default=None, foreign_key="user.id", nullable=False)
+#     # owner: "User" | None = Relationship(back_populates="items")
+#     owner: Optional["User"] = Relationship(back_populates="items")
 
 
-class ItemsOut(SQLModel):
-    data: list[ItemOut]
-    count: int
+# # Properties to return via API, id is always required
+# class ItemOut(ItemBase):
+#     id: int
+#     owner_id: int
+
+
+# class ItemsOut(SQLModel):
+#     data: list[ItemOut]
+#     count: int

@@ -15,41 +15,44 @@ from app.models.util import (
     Message,
 )
 from app.models.item import (Item,)
-from app.models.user import (
-    UpdatePassword,
-    User,
-    UserCreate,
-    UserCreateOpen,
-    UserOut,
-    UsersOut,
-    UserUpdate,
-    UserUpdateMe,)
+# from app.models.user import (
+#     UpdatePassword,
+#     User,
+#     UserCreate,
+#     UserCreateOpen,
+#     UserOut,
+#     UsersOut,
+#     UserUpdate,
+#     UserUpdateMe,)
+from app.models.employee import (
+    UpdatePassword, HREmployee, HREmployeeCreate, HREmployeeCreateOpen,
+    HREmployeeOut, HREmployeesOut, HREmployeeUpdate, HREmployeeUpdateMe)
 from app.utils import generate_new_account_email, send_email
 
 router = APIRouter()
 
 
 @router.get(
-    "/", dependencies=[Depends(get_current_active_superuser)], response_model=UsersOut
+    "/", dependencies=[Depends(get_current_active_superuser)], response_model=HREmployeesOut
 )
 def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """
     Retrieve users.
     """
 
-    statment = select(func.count()).select_from(User)
+    statment = select(func.count()).select_from(HREmployee)
     count = session.exec(statment).one()
 
-    statement = select(User).offset(skip).limit(limit)
+    statement = select(HREmployee).offset(skip).limit(limit)
     users = session.exec(statement).all()
 
-    return UsersOut(data=users, count=count)
+    return HREmployeesOut(data=users, count=count)
 
 
 @router.post(
-    "/", dependencies=[Depends(get_current_active_superuser)], response_model=UserOut
+    "/", dependencies=[Depends(get_current_active_superuser)], response_model=HREmployeeOut
 )
-def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
+def create_user(*, session: SessionDep, user_in: HREmployeeCreate) -> Any:
     """
     Create new user.
     """
@@ -73,9 +76,9 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
     return user
 
 
-@router.patch("/me", response_model=UserOut)
+@router.patch("/me", response_model=HREmployeeOut)
 def update_user_me(
-    *, session: SessionDep, user_in: UserUpdateMe, current_user: CurrentUser
+    *, session: SessionDep, user_in: HREmployeeUpdateMe, current_user: CurrentUser
 ) -> Any:
     """
     Update own user.
@@ -115,7 +118,7 @@ def update_password_me(
     return Message(message="Password updated successfully")
 
 
-@router.get("/me", response_model=UserOut)
+@router.get("/me", response_model=HREmployeeOut)
 def read_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Get current user.
@@ -123,8 +126,8 @@ def read_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     return current_user
 
 
-@router.post("/open", response_model=UserOut)
-def create_user_open(session: SessionDep, user_in: UserCreateOpen) -> Any:
+@router.post("/open", response_model=HREmployeeOut)
+def create_user_open(session: SessionDep, user_in: HREmployeeCreateOpen) -> Any:
     """
     Create new user without the need to be logged in.
     """
@@ -139,19 +142,19 @@ def create_user_open(session: SessionDep, user_in: UserCreateOpen) -> Any:
             status_code=400,
             detail="The user with this email already exists in the system",
         )
-    user_create = UserCreate.from_orm(user_in)
+    user_create = HREmployeeCreate.from_orm(user_in)
     user = crud.create_user(session=session, user_create=user_create)
     return user
 
 
-@router.get("/{user_id}", response_model=UserOut)
+@router.get("/{user_id}", response_model=HREmployeeOut)
 def read_user_by_id(
     user_id: int, session: SessionDep, current_user: CurrentUser
 ) -> Any:
     """
     Get a specific user by id.
     """
-    user = session.get(User, user_id)
+    user = session.get(HREmployee, user_id)
     if user == current_user:
         return user
     if not current_user.is_superuser:
@@ -165,19 +168,19 @@ def read_user_by_id(
 @router.patch(
     "/{user_id}",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=UserOut,
+    response_model=HREmployeeOut,
 )
 def update_user(
     *,
     session: SessionDep,
     user_id: int,
-    user_in: UserUpdate,
+    user_in: HREmployeeUpdate,
 ) -> Any:
     """
     Update a user.
     """
 
-    db_user = session.get(User, user_id)
+    db_user = session.get(HREmployee, user_id)
     if not db_user:
         raise HTTPException(
             status_code=404,
@@ -201,7 +204,7 @@ def delete_user(
     """
     Delete a user.
     """
-    user = session.get(User, user_id)
+    user = session.get(HREmployee, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     elif user != current_user and not current_user.is_superuser:
