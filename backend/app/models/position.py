@@ -12,10 +12,11 @@ class HRPositionBase(SQLModel):
     description: str | None = None
     posi_parentcode: int
     defaultPosition: int | None = None
-    company_id: int | None = Field(default=None, foreign_key="company.id")
+    company_id: int | None = Field(default=None, foreign_key="hrcompany.id")
 
 
 class HRPosition(HRPositionBase, table=True):
+    __tablename__ = "hr_department"
     id: int | None = Field(default=None, primary_key=True)
 
 

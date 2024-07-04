@@ -8,7 +8,7 @@ from app.models.department import HRDepartmentCreate
 from app.models.position import HRPositionCreate
 from app.models.employee import HREmployee, HREmployeeCreate
 
-engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
+engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI), echo=False)
 
 
 # make sure all SQLModel models are imported (app.models) before initializing DB
@@ -33,12 +33,12 @@ def init_db(session: Session) -> None:
         company_in = HRCompanyCreate(cmp_name="my company")
         company = crud.create_company(session=session, company_create=company_in)
 
-        department_in = HRDepartmentCreate(dept_code=1, dept_name="IT")
+        department_in = HRDepartmentCreate(dept_code=1, dept_parentcode=0, dept_name="IT", company_id=company.id)
         department_in.company = company
-        department = crud.create_department(department_in)
+        department = crud.create_department(session=session, department_create=department_in)
 
         position_in = HRPositionCreate(posi_code=1, posi_name="Manager", posi_parentcode=0, company_id=company.id)
-        position = crud.create_position(position_in)
+        position = crud.create_position(session=session, position_create=position_in)
 
         user_in = HREmployeeCreate(
             email=settings.FIRST_SUPERUSER,

@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
-from sqlalchemy import DateTime
+# from sqlalchemy import DateTime
+from datetime import datetime
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
@@ -7,6 +8,7 @@ if TYPE_CHECKING:
 
 
 class HRCompanyBase(SQLModel):
+    __tablename__ = "hr_company"
     cmp_code: str | None = None
     cmp_dateformat: str | None = None
     cmp_timeformat: str | None = None
@@ -30,7 +32,7 @@ class HRCompanyBase(SQLModel):
     token: str | None = None
     sendWithAttPhoto: bool | None = None
     sendDailyAttSummary: bool | None = None
-    attSummarySendTime: DateTime | None = None
+    attSummarySendTime: datetime | None = None
     SendLineOnWeekendAndHoliday: int | None = None
 
 
@@ -40,7 +42,7 @@ class HRCompanyCreate(HRCompanyBase):
 
 class HRCompany(HRCompanyBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    departments: list["HRDepartment"] = Relationship(back_populates="company")
+    departments: list["HRDepartment"] | None = Relationship(back_populates="company")
 
 
 class HRCompanyUpdate(HRCompanyBase):

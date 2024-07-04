@@ -15,15 +15,18 @@ class HRDepartmentBase(SQLModel):
     defaultDepartment: int | None = None
     lineToken: str | None = None
     description: str | None = None
-    company: "HRCompany" = Relationship(back_populates="departments")
 
 
 class HRDepartment(HRDepartmentBase, table=True):
+    __tablename__ = "hr_department"
     id: int | None = Field(default=None, primary_key=True)
+    company_id: int | None = Field(default=None, foreign_key="hrcompany.id")
+    company: "HRCompany" = Relationship(back_populates="departments")
 
 
 class HRDepartmentCreate(HRDepartmentBase):
-    pass
+    company_id: int = Field(default=None, foreign_key="hrcompany.id")
+    company: "HRCompany" = Relationship(back_populates="departments")
 
 
 class HRDepartmentUpdate(HRDepartmentBase):
