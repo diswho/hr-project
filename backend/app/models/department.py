@@ -20,12 +20,12 @@ class HRDepartmentBase(SQLModel):
 class HRDepartment(HRDepartmentBase, table=True):
     __tablename__ = "hr_department"
     id: int | None = Field(default=None, primary_key=True)
-    company_id: int | None = Field(default=None, foreign_key="hrcompany.id")
+    company_id: int | None = Field(default=None, foreign_key="hr_company.id")
     company: "HRCompany" = Relationship(back_populates="departments")
 
 
 class HRDepartmentCreate(HRDepartmentBase):
-    company_id: int = Field(default=None, foreign_key="hrcompany.id")
+    company_id: int = Field(default=None, foreign_key="hr_company.id")
     company: "HRCompany" = Relationship(back_populates="departments")
 
 

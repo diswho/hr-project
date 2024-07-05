@@ -3,9 +3,9 @@ from sqlmodel import Field, SQLModel, Numeric, ForeignKey, Column
 from datetime import datetime
 from decimal import Decimal
 
-# if TYPE_CHECKING:
-#     from .position import HRPosition
-#     from .department import HRDepartment
+if TYPE_CHECKING:
+    from .position import HRPosition
+    from .department import HRDepartment
 
 
 class HREmployeeBase(SQLModel):
@@ -65,11 +65,12 @@ class HREmployeeBase(SQLModel):
     nationalID: str | None = None
     emp_Verify: str | None = None
     emp_ViceCard: str | None = None
-    department_id: int | None = Field(default=None, foreign_key="hrdepartment.id")
-    position_id: int | None = Field(default=None, foreign_key="hrposition.id")
+    department_id: int | None = Field(default=None, foreign_key="hr_department.id")
+    position_id: int | None = Field(default=None, foreign_key="hr_position.id")
 
 
 class HREmployee(HREmployeeBase, table=True):
+    __tablename__ = "hr_employee"
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
 
