@@ -2,18 +2,18 @@
 
 ## Requirements
 
-* [Docker](https://www.docker.com/).
-* [Poetry](https://python-poetry.org/) for Python package and environment management.
+- [Docker](https://www.docker.com/).
+- [Poetry](https://python-poetry.org/) for Python package and environment management.
 
 ## Local Development
 
-* Start the stack with Docker Compose:
+- Start the stack with Docker Compose:
 
 ```bash
 docker compose up -d
 ```
 
-* Now you can open your browser and interact with these URLs:
+- Now you can open your browser and interact with these URLs:
 
 Frontend, built with Docker, with routes handled based on the path: http://localhost
 
@@ -50,7 +50,7 @@ By default, the dependencies are managed with [Poetry](https://python-poetry.org
 From `./backend/` you can install all the dependencies with:
 
 ```console
-$ poetry install
+$ poetry install --no-root
 ```
 
 Then you can start a shell session with the new environment with:
@@ -62,9 +62,15 @@ $ poetry shell
 Make sure your editor is using the correct Python virtual environment.
 
 Modify or add SQLModel models for data and SQL tables in `./backend/app/models.py`, API endpoints in `./backend/app/api/`, CRUD (Create, Read, Update, Delete) utils in `./backend/app/crud.py`.
+
 ### Local Run
 
+`export PYTHONPATH=$(pwd)`
+
+`set PYTHONPATH=%cd%`
+
 `uvicorn app.main:app --reload`
+
 ### VS Code
 
 There are already configurations in place to run the backend through the VS Code debugger, so that you can use breakpoints, pause and explore variables, etc.
@@ -163,23 +169,23 @@ As during local development your app directory is mounted as a volume inside the
 
 Make sure you create a "revision" of your models and that you "upgrade" your database with that revision every time you change them. As this is what will update the tables in your database. Otherwise, your application will have errors.
 
-* Start an interactive session in the backend container:
+- Start an interactive session in the backend container:
 
 ```console
 $ docker compose exec backend bash
 ```
 
-* Alembic is already configured to import your SQLModel models from `./backend/app/models.py`.
+- Alembic is already configured to import your SQLModel models from `./backend/app/models.py`.
 
-* After changing a model (for example, adding a column), inside the container, create a revision, e.g.:
+- After changing a model (for example, adding a column), inside the container, create a revision, e.g.:
 
 ```console
 $ alembic revision --autogenerate -m "Add column last_name to User model"
 ```
 
-* Commit to the git repository the files generated in the alembic directory.
+- Commit to the git repository the files generated in the alembic directory.
 
-* After creating the revision, run the migration in the database (this is what will actually change the database):
+- After creating the revision, run the migration in the database (this is what will actually change the database):
 
 ```console
 $ alembic upgrade head
@@ -199,6 +205,5 @@ $ alembic upgrade head
 
 If you don't want to start with the default models and want to remove them / modify them, from the beginning, without having any previous revision, you can remove the revision files (`.py` Python files) under `./backend/app/alembic/versions/`. And then create a first migration as described above.
 
-
-  git config --global user.email "discover.who@gmail.com"
-  git config --global user.name "diswho"
+git config --global user.email "discover.who@gmail.com"
+git config --global user.name "diswho"
